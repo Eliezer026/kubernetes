@@ -1,22 +1,32 @@
-version: '3.3'
-services:
-  postgres:
-    image: postgres:13
-    environment:
-      - POSTGRES_DB=platzi_market
-      - POSTGRES_USER=eliezer
-      - POSTGRES_PASSWORD=123456
-    ports:
-      - 5432:5432
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-     -  PGADMIN_DEFAULT_EMAIL=admin@gmail.com
-     -  PGADMIN_DEFAULT_PASSWORD=root
-    ports:
-      - 5050:80
-
+apiVersion: 3.3
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: platzi_market
+            - name: POSTGRES_USER
+              value: eliezer
+            - name: POSTGRES_PASSWORD
+              value: 123456
+          volumeMounts:
+            - mountPath: "/var/lib/postgresql/data"
+              name: "mendix-pgdata"
+      volumes:
+        - hostPath:
+            path: "/home/docker/pgdata"
+          name: mendix-pgdata
+          
 
