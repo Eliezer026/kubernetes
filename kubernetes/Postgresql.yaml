@@ -1,4 +1,4 @@
-apiVersion: 3.3
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
@@ -28,5 +28,5 @@ spec:
         - hostPath:
             path: "/home/docker/pgdata"
           name: mendix-pgdata
-          
+
 
