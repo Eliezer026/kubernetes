@@ -22,22 +22,22 @@ kind: StatefulSet
 metadata:
   generation: 1
   labels:
-    app: demo-app
-  name: demo-app
+    app: demo-artefact
+  name: demo-artefact
   namespace: default
 spec:
   podManagementPolicy: OrderedReady
-  replicas: 6 
+  replicas: 4 
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: demo-app
+      app: demo-artefact
   serviceName: ""
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: demo-app
+        app: demo-artefact
     spec:
       containers:
       - command:
@@ -50,7 +50,7 @@ spec:
         - --appendfilename appendonly-6379.aof
         image: redis
         imagePullPolicy: Always
-        name: demo-app
+        name: demo-artefact
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
