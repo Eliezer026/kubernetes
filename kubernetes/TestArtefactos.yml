@@ -18,19 +18,67 @@ spec:
         ports:
         - containerPort: 80
 apiVersion: apps/v1
-kind: Pod
+kind: StatefulSet
 metadata:
-  name: redis
+  generation: 1
+  labels:
+    app: demo-app
+  name: demo-app
+  namespace: default
 spec:
+  podManagementPolicy: OrderedReady
+  replicas: 6 
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: demo-app
+  serviceName: ""
   template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo-app
     spec:
       containers:
-        - name: redis
-          image: redis:latest
+      - command:
+        - redis-server
+        - --port 6379
+        - --cluster-enabled yes
+        - --cluster-node-timeout 5000
+        - --appendonly yes
+        - --cluster-config-file /var/cluster-config.conf
+        - --appendfilename appendonly-6379.aof
+        image: redis
+        imagePullPolicy: Always
+        name: demo-app
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+         - name: redis-pvc
+           mountPath: /var
+      - image: nginx:1.12
+        imagePullPolicy: IfNotPresent
+        name: redis-exporter
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+
+  volumeClaimTemplates:
+    - metadata: 
+        name: redis-pvc
+      spec: 
+          accessModes: 
+           - ReadWriteOnce
           resources:
-            limits:
-              cpu: '1'
-              memory: 2Gi
-            requests:
-              cpu: '0.5'
-              memory: 1Gi
+             requests:
+                 storage: 1Gi
