@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: apps/v2
 kind: Deployment
 metadata:
   name: nginx
@@ -17,12 +17,8 @@ spec:
         image: nginx:1.14.1
         ports:
         - containerPort: 80
-apiVersion: extensions/v1beta1
-kind: ReplicaSet
-metadata:
-  name: "redis-6"
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
