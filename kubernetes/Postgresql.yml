@@ -1,14 +1,15 @@
-apiVersion: '3.3'
-services:
-  postgres:
-    image: postgres:13
-    environment:
-      - POSTGRES_DB=platzi_market
-      - POSTGRES_USER=eliezer
-      - POSTGRES_PASSWORD=123456
-    ports:
-      - 5432:5432
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-
-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: nginx
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: 2
+      limits:
+        memory: "624Mi"
+        cpu: 3
