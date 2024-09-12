@@ -17,6 +17,8 @@ spec:
         image: nginx:1.14.1
         ports:
         - containerPort: 80
+apiVersion: apps/v3     
+kind: ReplicaSet        
 spec:
   replicas: 2
   template:
